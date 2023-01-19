@@ -1,6 +1,0 @@
-fileignoreconfig:
-- filename: mis/src/react-app-env.d.ts
-  checksum: 4ed2e05e69577a65a5fba2cb814173ec89e546e329d52b4f000e5d347ad75036
-- filename: mis/yarn.lock
-  checksum: 6d05a74001ce988951935023616294896450533f2f2bbfdfc40e67f69746f1c9
-version: ""
