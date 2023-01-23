@@ -1,18 +1,13 @@
 import React from 'react';
 
 import './App.css';
+import { StudentsList } from './Components/StudentsList/StudentsList';
 
 function App() {
   return (
     <div className="App">
       <div>
-        <table>
-          <th>
-            <td>
-              hello world
-            </td>
-          </th>
-        </table>
+        <StudentsList />
       </div>
     </div>
   );
