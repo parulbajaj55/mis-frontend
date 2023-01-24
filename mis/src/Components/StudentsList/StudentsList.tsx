@@ -2,6 +2,11 @@
 import React, { useCallback, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { FilterAsFC } from "../FilterComponent/Filter";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Tooltip } from "@mui/material";
+
+
 
 
 
@@ -40,12 +45,36 @@ export const StudentsList = () =>{
         fetchStudentsHandler();
     }, [fetchStudentsHandler]);
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        console.log("clicked");
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
      const tableColumns =[
         { name:"First Name", selector: (row : any) => row.firstName},
         { name:"Middle Name", selector: (row : any) => row.middleName},
         { name:"Last Name", selector: (row : any) => row.lastName},
         { name:"Date of Birth", selector: (row : any) => row.dateOfBirth},
-        { name:"Favourite Subject", selector: (row : any) => row.favouriteSubject}
+        { name:"Favourite Subject", selector: (row : any) => row.favouriteSubject},
+        { name:"Edit Student", selector:(row : any) => <EditIcon sx={{
+            "&:hover": {
+              backgroundColor: "transparent",
+              cursor: "pointer"
+              }
+          }} color="primary" onClick={handleClickOpen}></EditIcon>},
+        { name:"Delete Student", selector:(row : any) =>  <DeleteIcon sx={{
+            "&:hover": {
+              backgroundColor: "transparent",
+              cursor: "pointer"
+              }
+          }} style={{ color: "#D22B2B" }}></DeleteIcon>}
     ];
 
     // const filteredItems = students.filter(
