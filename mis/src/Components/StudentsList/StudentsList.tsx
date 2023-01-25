@@ -6,6 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditStudentAsFC from "../EditStudent/EditStudent";
 import { Event } from "@mui/icons-material";
+import { CardActions, CardContent, IconButton, Typography, CardHeader, Card } from "@mui/material";
+import { maxWidth } from "@mui/system";
 
 
 export const StudentsList = () =>{
@@ -93,11 +95,41 @@ export const StudentsList = () =>{
     let content = <p>No students found.</p>;
 
     if(students.length > 0){
-        content = <DataTable 
-            data={students}
-            columns={tableColumns}
-            onRowClicked={(event) => console.log(event)}
-        />
+        content = 
+        // <DataTable 
+        //     data={students}
+        //     columns={tableColumns}
+        //     onRowClicked={(event) => console.log(event)}
+        // />
+        <div style={{justifyContent:'center'}}>
+            <Card style={{ height: "200px" }} sx={{ minWidth: 1000, marginLeft:"10%", marginRight:"10%"}}>
+            <CardHeader
+                title="Parul Bajaj"
+                subheader="Date Of Birth: September 14, 2016"
+                style={{ textAlign: "center" }}
+            />
+            <CardContent>
+                <Typography
+                variant="body2"
+                color="text.secondary"
+                style={{ textAlign: "center" }}
+                >
+                Favourite Subject: English
+                </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+                <IconButton
+                style={{ left:"46%" }}
+                aria-label="add to favorites"
+                >
+                <EditIcon />
+                </IconButton>
+                <IconButton style={{ left:"46%" }} aria-label="share">
+                <DeleteIcon />
+                </IconButton>
+            </CardActions>
+        </Card>
+        </div>
     }
 
     if(error){
@@ -116,9 +148,10 @@ export const StudentsList = () =>{
                     onFilter={(e) => setFilterText(e.target.value)}
                     filterText={filterText}
                 />
+                {content}
             </div>
             
-            {content}
+            
         </div>
     );
 
