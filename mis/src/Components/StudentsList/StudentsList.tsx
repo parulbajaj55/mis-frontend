@@ -4,10 +4,8 @@ import DataTable from "react-data-table-component";
 import { FilterAsFC } from "../FilterComponent/Filter";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Tooltip } from "@mui/material";
-
-
-
+import EditStudentAsFC from "../EditStudent/EditStudent";
+import { Event } from "@mui/icons-material";
 
 
 export const StudentsList = () =>{
@@ -33,11 +31,22 @@ export const StudentsList = () =>{
             }
             const data = await response.json();
 
-            setStudents(data);
+            const transformedStudents = () => data.map((student: any) => {
+                return {
+                    firstName: student.firstName,
+                    middleName: student.middleName,
+                    lastName: student.lastName,
+                    dateOfBirth: student.dateOfBirth.slice(0,10),
+                    favouriteSubject: student.favouriteSubject
+                };
+            });
+            setStudents(transformedStudents);
+            console.log(transformedStudents());
         }
         catch(error : any){
             setError(error.message);
         }
+        
         setIsLoading(false);
     }, []);
 
@@ -47,10 +56,10 @@ export const StudentsList = () =>{
 
     const [open, setOpen] = React.useState(false);
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (event: Event) => {
         console.log("clicked");
         setOpen(true);
-    };
+        <EditStudentAsFC student={students} />    };
 
     const handleClose = () => {
         setOpen(false);
@@ -68,7 +77,7 @@ export const StudentsList = () =>{
               backgroundColor: "transparent",
               cursor: "pointer"
               }
-          }} color="primary" onClick={handleClickOpen}></EditIcon>},
+          }} color="primary"></EditIcon>},
         { name:"Delete Student", selector:(row : any) =>  <DeleteIcon sx={{
             "&:hover": {
               backgroundColor: "transparent",
@@ -87,6 +96,7 @@ export const StudentsList = () =>{
         content = <DataTable 
             data={students}
             columns={tableColumns}
+            onRowClicked={(event) => console.log(event)}
         />
     }
 
