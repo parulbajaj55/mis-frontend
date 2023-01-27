@@ -4,15 +4,16 @@ import DataTable from "react-data-table-component";
 import { FilterAsFC } from "../FilterComponent/Filter";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditStudentAsFC from "../EditStudent/EditStudent";
+import { EditStudentAsFC } from "../EditStudent/EditStudent";
 import { Event } from "@mui/icons-material";
-import { CardActions, CardContent, IconButton, Typography, CardHeader, Card } from "@mui/material";
 import { maxWidth } from "@mui/system";
+import { StudentAsFC } from "../Student/Student";
+
 
 
 export const StudentsList = () =>{
     const [filterText, setFilterText] = React.useState("");
-    const [students, setStudents] = React.useState([]);
+    const [students, setStudents] = React.useState<any>([]);
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
     //const {data} = await axios.get('http://localhost:5026/api/Student');
@@ -61,7 +62,7 @@ export const StudentsList = () =>{
     const handleClickOpen = (event: Event) => {
         console.log("clicked");
         setOpen(true);
-        <EditStudentAsFC student={students} />    };
+        <EditStudentAsFC student={students[0]} />    };
 
     const handleClose = () => {
         setOpen(false);
@@ -101,35 +102,12 @@ export const StudentsList = () =>{
         //     columns={tableColumns}
         //     onRowClicked={(event) => console.log(event)}
         // />
-        <div style={{justifyContent:'center'}}>
-            <Card style={{ height: "200px" }} sx={{ minWidth: 1000, marginLeft:"10%", marginRight:"10%"}}>
-            <CardHeader
-                title="Parul Bajaj"
-                subheader="Date Of Birth: September 14, 2016"
-                style={{ textAlign: "center" }}
-            />
-            <CardContent>
-                <Typography
-                variant="body2"
-                color="text.secondary"
-                style={{ textAlign: "center" }}
-                >
-                Favourite Subject: English
-                </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-                <IconButton
-                style={{ left:"46%" }}
-                aria-label="add to favorites"
-                >
-                <EditIcon />
-                </IconButton>
-                <IconButton style={{ left:"46%" }} aria-label="share">
-                <DeleteIcon />
-                </IconButton>
-            </CardActions>
-        </Card>
-        </div>
+        <>{students.map((student: any) => {
+            return (
+                <StudentAsFC key={student.id} student={student} />
+            );
+        })}
+        </>
     }
 
     if(error){
@@ -148,10 +126,10 @@ export const StudentsList = () =>{
                     onFilter={(e) => setFilterText(e.target.value)}
                     filterText={filterText}
                 />
-                {content}
+                
             </div>
             
-            
+            {content}
         </div>
     );
 
