@@ -17,13 +17,12 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
     const [filterText, setFilterText] = React.useState("");
     const [editStudent, setEditStudent] = React.useState(student);
 
-     const [value, setValue] = React.useState<any>(
-        dayjs(editStudent.dateOfBirth.slice(0,10)),
+     const [dateOfBirth, setDateOfBirth] = React.useState<any>(
+        dayjs(editStudent.dateOfBirth),
       );
-
     
       const handleChange = (newValue: any) => {
-        setValue(newValue);
+        setDateOfBirth(newValue);
       };
 
       const [firstName, setFirstName] = React.useState<string>(editStudent.firstName);
@@ -43,14 +42,14 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
       };
 
       async function updateStudentHandler() {
-        
+
         try{
             setEditStudent({
                 ...editStudent,
                 firstName: firstName,
                 middleName: middleName,
                 lastName: lastName,
-                dateOfBirth: value.slice(0,10),
+                dateOfBirth: dateOfBirth,
                 //favouriteSubject: data.favouriteSubject
             })
             const requestOptions = {
@@ -69,7 +68,7 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
                     firstName: data.firstName,
                     middleName: data.middleName,
                     lastName: data.lastName,
-                    dateOfBirth: data.dateOfBirth.slice(0,10),
+                    dateOfBirth: data.dateOfBirth,
                     favouriteSubject: data.favouriteSubject
                 };
             };
@@ -135,7 +134,7 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
                          <DesktopDatePicker
                              label="Date of Birth"
                             inputFormat="MM/DD/YYYY"
-                             value={value}
+                             value={dateOfBirth}
                              onChange={handleChange}
                              renderInput={(params:any) => <TextField {...params} />}
                              />
