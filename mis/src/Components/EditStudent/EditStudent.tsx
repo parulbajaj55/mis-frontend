@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {Formik, Form,
   } from 'formik'
 import { TextField, Button, Card, CardContent, Typography} from '@mui/material';
@@ -34,6 +34,7 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
 
       const handleMiddleNameChange = (event:any) => {
         setMiddleName(event.target.value);
+        console.log(middleName);
       };
       const [lastName, setLastName] = React.useState<string>(editStudent.lastName);
      
@@ -44,14 +45,43 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
       async function updateStudentHandler() {
 
         try{
+            console.log(editStudent);
+            // useEffect(() => {
+            //     // setPosts Here
+            //     setEditStudent({
+            //         ...editStudent,
+            //         firstName: firstName,
+            //         middleName: middleName,
+            //         lastName: lastName,
+            //         dateOfBirth: dateOfBirth,
+            //         subjectId: 7,
+            //         //favouriteSubject: "English"
+            //     })
+            //     }, [editStudent]);
             setEditStudent({
                 ...editStudent,
                 firstName: firstName,
                 middleName: middleName,
                 lastName: lastName,
                 dateOfBirth: dateOfBirth,
-                //favouriteSubject: data.favouriteSubject
+                subjectId: 7,
+                //favouriteSubject: "English"
             })
+
+            // useEffect(async () => {
+            //     setEditStudent({
+            //         ...editStudent,
+            //         firstName: firstName,
+            //         middleName: middleName,
+            //         lastName: lastName,
+            //         dateOfBirth: dateOfBirth,
+            //         subjectId: 7,
+            //         //favouriteSubject: "English"
+            //     })
+            //   }, []);
+
+
+            console.log(editStudent);
             const requestOptions = {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -65,6 +95,7 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
 
             const transformedStudent = () => {
                 return {
+                    id: data.id,
                     firstName: data.firstName,
                     middleName: data.middleName,
                     lastName: data.lastName,
@@ -89,10 +120,10 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
             </Typography>
                 <Formik
                     initialValues={
-                        { firstName: student.firstName,
-                            middleName: student.middleName,
-                            lastName: student.lastName,
-                            dateOfBirth: student.dateOfBirth,
+                        { firstName: editStudent.firstName,
+                            middleName: editStudent.middleName,
+                            lastName: editStudent.lastName,
+                            dateOfBirth: editStudent.dateOfBirth,
                             //favoriteSubject: student.favoriteSubject.name, 
                         }
                     }

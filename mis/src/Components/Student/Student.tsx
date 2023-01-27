@@ -11,6 +11,7 @@ interface StudentProps {
 export const StudentAsFC : React.FC<StudentProps> = ({ student }) => {
 
     const [isEditing, setIsEditing] = React.useState(false);
+    //console.log(student.id);
 
     const startEditingHandler = () => {
         setIsEditing(true);

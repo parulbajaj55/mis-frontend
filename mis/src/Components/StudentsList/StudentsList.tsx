@@ -32,19 +32,22 @@ export const StudentsList = () =>{
             if(!response.ok){
                 throw new Error('Something went wrong!');
             }
+            //console.log(response);
             const data = await response.json();
+            console.log(data);
 
             const transformedStudents = () => data.map((student: any) => {
                 return {
+                    id: student.id,
                     firstName: student.firstName,
                     middleName: student.middleName,
                     lastName: student.lastName,
                     dateOfBirth: student.dateOfBirth.slice(0,10),
-                    favouriteSubject: student.favouriteSubject
+                    //favouriteSubject: student.favouriteSubject
                 };
             });
             setStudents(transformedStudents);
-            console.log(transformedStudents());
+            //console.log(transformedStudents());
         }
         catch(error : any){
             setError(error.message);
