@@ -1,37 +1,87 @@
 import React from "react";
-import { useState } from 'react'
 import {Formik, Form,
   } from 'formik'
 import { TextField, Button, Card, CardContent, Typography} from '@mui/material';
-//import { useLocation } from 'react-router-dom'
-//import classes from "./styles/StudentsStyle.module.css";
 import { FilterAsFC } from "../FilterComponent/Filter";
 import './EditStudent.css';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 interface EditStudentProps{
     student: any
-    //handleChange: 
   }
 
 export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
     const [filterText, setFilterText] = React.useState("");
-    // const location = useLocation();
-    // const student = location.state.student;
-   
-    function setStudent(values: { firstName: string; middleName: string; lastName: string; dateOfBirth: string; favoriteSubject: any; }) {
-      const payload = {
-      id: student.id,
-      firstName: values.firstName,
-      lastName: values.lastName,
-      middleName: values.middleName,
-      dateOfBirth: values.dateOfBirth,
-      subjectId: values.favoriteSubject.SubjectId
-      }
-      
-    //   axios.put('http://localhost:5026/Student',payload).then(resp => {
-    //     console.log(resp.data);
-    //     });
-     }
+    const [editStudent, setEditStudent] = React.useState(student);
+
+     const [value, setValue] = React.useState<any>(
+        dayjs(editStudent.dateOfBirth.slice(0,10)),
+      );
+
+    
+      const handleChange = (newValue: any) => {
+        setValue(newValue);
+      };
+
+      const [firstName, setFirstName] = React.useState<string>(editStudent.firstName);
+
+      const handleFirstNameChange = (event:any) => {
+        setFirstName(event.target.value);
+      };
+      const [middleName, setMiddleName] = React.useState<string>(editStudent.middleName);
+
+      const handleMiddleNameChange = (event:any) => {
+        setMiddleName(event.target.value);
+      };
+      const [lastName, setLastName] = React.useState<string>(editStudent.lastName);
+     
+      const handleLastNameChange = (event:any) => {
+        setLastName(event.target.value);
+      };
+
+      async function updateStudentHandler() {
+        
+        try{
+            setEditStudent({
+                ...editStudent,
+                firstName: firstName,
+                middleName: middleName,
+                lastName: lastName,
+                dateOfBirth: value.slice(0,10),
+                //favouriteSubject: data.favouriteSubject
+            })
+            const requestOptions = {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(editStudent)
+            };
+            const response = await fetch('http://localhost:5026/api/Student',requestOptions);
+            if(!response.ok){
+                throw new Error('Something went wrong!');
+            }
+            const data = await response.json();
+
+            const transformedStudent = () => {
+                return {
+                    firstName: data.firstName,
+                    middleName: data.middleName,
+                    lastName: data.lastName,
+                    dateOfBirth: data.dateOfBirth.slice(0,10),
+                    favouriteSubject: data.favouriteSubject
+                };
+            };
+            setEditStudent({...editStudent, transformedStudent});
+            console.log(transformedStudent);
+        }
+        catch(error : any){
+            console.log(error.message);
+        }
+           
+    }
+
     return (  
       <Card sx={{ minWidth: 1000, marginLeft:"15%", marginRight:"15%" }} style={{border: "1px solid #ccc"}}>
         <CardContent>
@@ -47,12 +97,7 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
                             //favoriteSubject: student.favoriteSubject.name, 
                         }
                     }
-                    onSubmit={(student:any, actions:any) => {
-                        console.log({ student, actions })
-                        setStudent(student)
-                        alert(JSON.stringify(student, null, 2))
-                        actions.setSubmitting(false)
-                    }}
+                    onSubmit={updateStudentHandler}
                 >
                     <Form className="form_control">
                         <div>
@@ -61,8 +106,8 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
                                 label="First Name"
                                 name='firstName'
                                 placeholder='firstName'
-                                value={student.firstName}
-                                //onChange={props.handleChange}
+                                value={firstName}
+                                onChange={handleFirstNameChange}
                             />
                         </div>
                         <div >
@@ -71,8 +116,8 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
                                 label="Middle Name"
                                 name='middleName'
                                 placeholder='Middle Name'
-                                value={student.middleName}
-                                //onChange={props.handleChange}
+                                value={middleName}
+                                onChange={handleMiddleNameChange}
                             />
                         </div>
                         <div>
@@ -81,27 +126,29 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
                                 label="Last Name"
                                 name='lastName'
                                 placeholder='Last Name'
-                                value={student.lastName}
-                                //onChange={props.handleChange}
+                                value={lastName}
+                                onChange={handleLastNameChange}
                         />
                         </div>
                         <div>
-                            <TextField
-                                id='date'
-                                label="Date of Birth"
-                                name='dateOfBirth'
-                                placeholder='Date of Birth'
-                                value={student.dateOfBirth.slice(0,10)}
-                                //onChange={props.handleChange}
-                            />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                         <DesktopDatePicker
+                             label="Date of Birth"
+                            inputFormat="MM/DD/YYYY"
+                             value={value}
+                             onChange={handleChange}
+                             renderInput={(params:any) => <TextField {...params} />}
+                             />
+                             </LocalizationProvider>
                         </div>
+
                         <div style={{marginTop: "0px"}}>
                             <FilterAsFC onFilter={(e) => setFilterText(e.target.value)}
                                     filterText={filterText}  
                             //onChange={props.handleChange}
                             />
                         </div>
-                            <Button variant='contained' type='submit'>
+                            <Button variant='contained' type='submit' >
                             Save Changes
                         </Button>  
                     </Form>

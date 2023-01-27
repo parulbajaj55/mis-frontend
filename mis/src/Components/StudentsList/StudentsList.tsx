@@ -68,27 +68,6 @@ export const StudentsList = () =>{
         setOpen(false);
     };
 
-
-     const tableColumns =[
-        { name:"First Name", selector: (row : any) => row.firstName},
-        { name:"Middle Name", selector: (row : any) => row.middleName},
-        { name:"Last Name", selector: (row : any) => row.lastName},
-        { name:"Date of Birth", selector: (row : any) => row.dateOfBirth},
-        { name:"Favourite Subject", selector: (row : any) => row.favouriteSubject},
-        { name:"Edit Student", selector:(row : any) => <EditIcon sx={{
-            "&:hover": {
-              backgroundColor: "transparent",
-              cursor: "pointer"
-              }
-          }} color="primary"></EditIcon>},
-        { name:"Delete Student", selector:(row : any) =>  <DeleteIcon sx={{
-            "&:hover": {
-              backgroundColor: "transparent",
-              cursor: "pointer"
-              }
-          }} style={{ color: "#D22B2B" }}></DeleteIcon>}
-    ];
-
     // const filteredItems = students.filter(
     //     (item) =>
     //       (item.favouriteSubject.toLowerCase().includes(filterText.toLowerCase())
@@ -97,11 +76,6 @@ export const StudentsList = () =>{
 
     if(students.length > 0){
         content = 
-        // <DataTable 
-        //     data={students}
-        //     columns={tableColumns}
-        //     onRowClicked={(event) => console.log(event)}
-        // />
         <>{students.map((student: any) => {
             return (
                 <StudentAsFC key={student.id} student={student} />
@@ -119,7 +93,6 @@ export const StudentsList = () =>{
     }
 
     return(
-        
         <div>
             <div>
                 <FilterAsFC
