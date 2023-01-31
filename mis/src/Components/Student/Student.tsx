@@ -11,7 +11,7 @@ interface StudentProps {
 export const StudentAsFC : React.FC<StudentProps> = ({ student }) => {
 
     const [isEditing, setIsEditing] = React.useState(false);
-    //console.log(student.id);
+    const [isDeleted, setIsDeleted] = React.useState(false);
 
     const startEditingHandler = () => {
         setIsEditing(true);
@@ -21,14 +21,26 @@ export const StudentAsFC : React.FC<StudentProps> = ({ student }) => {
         setIsEditing(false);
     };
 
-    // return (
-    //     <div className="new-expense">
-    //         {!isEditing && <button onClick={startEditingHandler}>Add New Expense</button>}
-    //         {isEditing && <ExpenseForm onSaveExpenseData = {saveExpenseDataHandler} 
-    //         onCancel={stopEditingHandler}
-    //         />}
-    //     </div>
-    // );
+    const deleteStudentHandler = async () => {
+        try {
+            const requestOptions = {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: student.id
+            };
+            const response = await fetch('http://localhost:5026/api/Student/' + student.id,{ method: 'DELETE' });
+            if(!response.ok){
+                throw new Error('Something went wrong!');
+            }
+            const data = await response.json();
+            console.log(data);
+        }
+        catch(error : any){
+            console.log(error.message);
+        }
+        setIsDeleted(true);
+    }
+
     return (
         <div style={{justifyContent:'center'}}>
             {!isEditing && <Card style={{ height: "200px", border: "1px solid #ccc"}} sx={{ minWidth: 1000, marginLeft:"15%", marginRight:"15%"}}>
@@ -54,12 +66,13 @@ export const StudentAsFC : React.FC<StudentProps> = ({ student }) => {
                     >
                     <EditIcon color="primary" />
                     </IconButton>
-                    <IconButton style={{ left:"46%" }} aria-label="share">
+                    <IconButton style={{ left:"46%" }} aria-label="share"
+                    onClick={deleteStudentHandler}>
                     <DeleteIcon style={{ color: "#D22B2B" }}/>
                     </IconButton>
                 </CardActions>
             </Card>}
-            {isEditing && <EditStudentAsFC student={student} />}
+            {isEditing && <EditStudentAsFC student={student} stopEditingHandler={stopEditingHandler}/>}
         </div>
     );
 }

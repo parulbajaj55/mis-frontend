@@ -1,21 +1,22 @@
-import React, { useEffect } from "react";
 import {Formik, Form,
   } from 'formik'
 import { TextField, Button, Card, CardContent, Typography} from '@mui/material';
 import { FilterAsFC } from "../FilterComponent/Filter";
 import './EditStudent.css';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import React from 'react';
 
 interface EditStudentProps{
-    student: any
+    student: any,
+    stopEditingHandler: () => void
   }
 
-export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
+export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student, stopEditingHandler }) =>  {
     const [filterText, setFilterText] = React.useState("");
-    const [editStudent, setEditStudent] = React.useState(student);
+    const editStudent = student;
 
      const [dateOfBirth, setDateOfBirth] = React.useState<any>(
         dayjs(editStudent.dateOfBirth),
@@ -42,44 +43,17 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
         setLastName(event.target.value);
       };
 
-      async function updateStudentHandler() {
-
+      const updateStudentHandler = async () => {
+        //event.preventDefault();
         try{
             console.log(editStudent);
-            // useEffect(() => {
-            //     // setPosts Here
-            //     setEditStudent({
-            //         ...editStudent,
-            //         firstName: firstName,
-            //         middleName: middleName,
-            //         lastName: lastName,
-            //         dateOfBirth: dateOfBirth,
-            //         subjectId: 7,
-            //         //favouriteSubject: "English"
-            //     })
-            //     }, [editStudent]);
-            setEditStudent({
-                ...editStudent,
-                firstName: firstName,
-                middleName: middleName,
-                lastName: lastName,
-                dateOfBirth: dateOfBirth,
-                subjectId: 7,
+            
+                editStudent.firstName = firstName;
+                editStudent.middleName = middleName;
+                editStudent.lastName = lastName;
+                editStudent.dateOfBirth = dateOfBirth;
+                editStudent.subjectId = 7;
                 //favouriteSubject: "English"
-            })
-
-            // useEffect(async () => {
-            //     setEditStudent({
-            //         ...editStudent,
-            //         firstName: firstName,
-            //         middleName: middleName,
-            //         lastName: lastName,
-            //         dateOfBirth: dateOfBirth,
-            //         subjectId: 7,
-            //         //favouriteSubject: "English"
-            //     })
-            //   }, []);
-
 
             console.log(editStudent);
             const requestOptions = {
@@ -93,18 +67,15 @@ export const EditStudentAsFC : React.FC<EditStudentProps> = ({ student }) =>  {
             }
             const data = await response.json();
 
-            const transformedStudent = () => {
-                return {
-                    id: data.id,
-                    firstName: data.firstName,
-                    middleName: data.middleName,
-                    lastName: data.lastName,
-                    dateOfBirth: data.dateOfBirth,
-                    favouriteSubject: data.favouriteSubject
-                };
-            };
-            setEditStudent({...editStudent, transformedStudent});
-            console.log(transformedStudent);
+            editStudent.id = data.id;
+            editStudent.firstName = data.firstName;
+            editStudent.middleName = data.middleName;
+            editStudent.lastName = data.lastName;
+            editStudent.dateOfBirth = data.dateOfBirth;
+            editStudent.favouriteSubject = data.favouriteSubject;
+            
+            console.log(editStudent);
+            stopEditingHandler();
         }
         catch(error : any){
             console.log(error.message);
